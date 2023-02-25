@@ -1,1 +1,2 @@
 vehicles filter=lfs diff=lfs merge=lfs -text
+vehicles.zip filter=lfs diff=lfs merge=lfs -text
