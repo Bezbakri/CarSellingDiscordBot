@@ -28,10 +28,20 @@ async def GetCarListing(ctx):
         if m.author == ctx.author and m.channel == ctx.channel:
             return True
         return False
+    def check_if_num(m):
+        if m.author == ctx.author and m.channel == ctx.channel:
+            try:
+                float(m.content)
+                return True
+            except:
+                return False
+        return False
     await ctx.send("What is your name?")
     name = await bot.wait_for("message", check=check_author)
     await ctx.send("What is your favorite color?")
     color = await bot.wait_for("message", check=check_author)
-    await ctx.send(f"Hi {name.content}, who likes {color.content}")
+    await ctx.send("Enter a number")
+    number = await bot.wait_for("message", check=check_if_num)
+    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}")
 
 bot.run(DISCORD_TOKEN)
