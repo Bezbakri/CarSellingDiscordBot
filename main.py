@@ -148,7 +148,7 @@ async def GetCarListing(ctx):
     filtered_by_bodystyle = []
     for car in filtered_once:
         try:
-            if car[17] == user_bodystyle:
+            if car[17].lower() == user_bodystyle:
                 filtered_by_bodystyle += car
         except:
             continue
@@ -159,6 +159,7 @@ async def GetCarListing(ctx):
     if len(filtered_by_bodystyle) <= 10:
         end_routine(filtered_by_bodystyle)
         return
+    await ctx.send(f"Found {valid_possible_cars} {filtered_by_bodystyle[17]}s in your area.")
     
     # more filters?
 
