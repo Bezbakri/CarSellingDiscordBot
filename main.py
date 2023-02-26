@@ -29,11 +29,13 @@ async def GetCarListing(ctx):
         if m.author == ctx.author and m.channel == ctx.channel:
             return True
         return False
-    def check_if_num(m):
+    def check_mile_radius(m):
         if m.author == ctx.author and m.channel == ctx.channel:
             try:
-                float(m.content)
-                return True
+                rad = int(m.content)
+                if rad > 0:
+                    return True
+                return False
             except:
                 return False
         return False
@@ -65,6 +67,10 @@ async def GetCarListing(ctx):
        await ctx.send("Run the command again. ZIp doesn't exist.")
     # This formula calculates distance as-the-crow-flies between two positions of a latitude and longitude
     #mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
+    
+    await ctx.send("Enter a mile radius")
+    mile_radius = await bot.wait_for("message", check=check_mile_radius)
+    mile_radius = int(mile_radius.content)
     
     await ctx.send(f"Your zip code is {zip_code}, so your latitude is {lat1} and your longitude is {lon1}.")
 
