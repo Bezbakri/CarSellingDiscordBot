@@ -73,6 +73,11 @@ async def GetCarListing(ctx):
                 return False
         return False
     
+    def check_drive_type(m):
+        if m.author == ctx.author and m.channel == ctx.channel:
+            return m.content.lower() in ["fwd", "rwd", "4wd"]
+        return False
+    
     async def end_routine(list_of_cars):
         await ctx.send("The list seems to be narrow enough. We found some cars you might like!")
     
@@ -191,5 +196,34 @@ async def GetCarListing(ctx):
         await end_routine(filtered_by_mileage)
         return
     await ctx.send(f"Found {len(filtered_by_mileage)} autos with that mileage in your area.")
+    
+    # Filter by drive type.
+    await ctx.send("What drive type should it have? Options are: fwd, rwd, 4wd.")
+    drive_type = await bot.wait_for("message", check=check_drive_type)
+    user_drive_type = drive_type.content.lower()
+    
+    await ctx.send("Noted! Working...")
+    filtered_by_drive = []
+    for car in filtered_by_mileage:
+        try:
+            if car[15] <= user_drive_type:
+                filtered_by_drive.append(car)
+        except:
+            continue
+    
+    if len(filtered_by_drive) == 0:
+        await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
+        return
+    if len(filtered_by_drive) <= 10:
+        await end_routine(filtered_by_mileage)
+        return
+    await ctx.send(f"Done!")
+    
+    # We're done. If there are still too many results, send the closest 10 cars to the user. 
+    for car in filtered_by_drive:
+        lat2 = 
+        dist_from_car = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))
+                                      +math.cos(math.radians(lat1))*math.cos(math.radians(lat2))
+                                      *math.cos(math.radians(lon2-lon1)))*6371*0.62137119
 
 bot.run(DISCORD_TOKEN)
