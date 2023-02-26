@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 from nextcord.ext import commands
 import csv
+import math
 
 load_dotenv()
 
@@ -48,6 +49,14 @@ async def GetCarListing(ctx):
             except:
                 return False
         return False
+    def check_price(m):
+        if m.author == ctx.author and m.channel == ctx.channel:
+            try:
+                int(m.content)
+                return True
+            except:
+                return False
+        return False
     
     # Build a dictionary to map US zip codes to latitude and longitude
     zip_dict = {}
@@ -63,6 +72,7 @@ async def GetCarListing(ctx):
     # Convert this to latitude and longitude
     try:
         lat1, lon1 = zip_dict[zip_code]
+        lat1, lon1 = float(lat1), float(lon1)
     except:
        await ctx.send("This ZIP code doesn't exist. Try the command again.")
     
@@ -71,6 +81,9 @@ async def GetCarListing(ctx):
     mile_radius = float(mile_radius.content)
     
     # ADD QUESTION FOR VARIABLE NAMED PRICE_LIMIT HERE
+    await ctx.send("What is your price limit?")
+    price_limit = await bot.wait_for("message", check=check_price)
+    user_price_limit = int(price_limit.content)
     
     filtered_once = []
     valid_possible_cars = 0
@@ -79,6 +92,10 @@ async def GetCarListing(ctx):
         for car in cars:
             # First filter by price...
             price = car[4]
+            try:
+                price = int(price)
+            except:
+                continue
             if price > user_price_limit:
                 continue
             
@@ -86,15 +103,20 @@ async def GetCarListing(ctx):
             lat2 = car[23]
             lon2 = car[24]
             
+            
+            
             # If no geolocation given, skip
             if lat2 == '' or lon2 == '':
                 continue
+            
+            lat2 = float(lat2)
+            lon2 = float(lon2)
             
             # This formula calculates distance in miles as-the-crow-flies between two positions given lat/long
             dist_from_car = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))
                                       +math.cos(math.radians(lat1))*math.cos(math.radians(lat2))
                                       *math.cos(math.radians(lon2-lon1)))*6371*0.62137119
-            if mi_dist > mile_radius:
+            if dist_from_car > mile_radius:
                 continue
                 
             # Else, car is a valid proposition, note it down
