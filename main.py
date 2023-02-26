@@ -36,12 +36,23 @@ async def GetCarListing(ctx):
             except:
                 return False
         return False
+    
+    def check_zip(m):
+        if m.author == ctx.author and m.channel == ctx.channel and len(m.content.trim()) == 5:
+            try:
+                int(m.content)
+                return True
+            except:
+                return False
+        return False
     await ctx.send("What is your name?")
     name = await bot.wait_for("message", check=check_author)
     await ctx.send("What is your favorite color?")
     color = await bot.wait_for("message", check=check_author)
     await ctx.send("Enter a number")
     number = await bot.wait_for("message", check=check_if_num)
-    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}")
+    await ctx.send("Enter your zip code")
+    zip_code = await bot.wait_for("message", check=check_zip)
+    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}. Zip is {zip_code}")
 
 bot.run(DISCORD_TOKEN)
