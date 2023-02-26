@@ -54,6 +54,7 @@ async def GetCarListing(ctx):
     number = await bot.wait_for("message", check=check_if_num)
     await ctx.send("Enter your zip code")
     zip_code = await bot.wait_for("message", check=check_zip)
+    zip_code = zip_code.content.strip()
     # Search user's zip code and get their lat and lon
     with csv.reader(open('us_zip_codes.csv'), newline='') as zips:
         # binary search for user's zip code
