@@ -166,7 +166,7 @@ async def GetCarListing(ctx):
         await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
         return
     if len(filtered_by_bodystyle) <= 10:
-        end_routine(filtered_by_bodystyle)
+        await end_routine(filtered_by_bodystyle)
         return
     await ctx.send(f"Found {len(filtered_by_bodystyle)} {user_bodystyle}s in your area.")
     
@@ -179,7 +179,7 @@ async def GetCarListing(ctx):
     filtered_by_mileage = []
     for car in filtered_by_bodystyle:
         try:
-            if car[11] <= user_car_mileage:
+            if int(car[11]) <= user_car_mileage:
                 filtered_by_mileage.append(car)
         except:
             continue
@@ -188,7 +188,7 @@ async def GetCarListing(ctx):
         await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
         return
     if len(filtered_by_mileage) <= 10:
-        end_routine(filtered_by_mileage)
+        await end_routine(filtered_by_mileage)
         return
     await ctx.send(f"Found {len(filtered_by_mileage)} autos with that mileage in your area.")
 
