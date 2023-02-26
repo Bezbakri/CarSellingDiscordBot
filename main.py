@@ -59,8 +59,10 @@ async def GetCarListing(ctx):
     zip_code = await bot.wait_for("message", check=check_zip)
     zip_code = zip_code.content
     # Convert this to latitude and longitude
-    lat1, lon1 = zip_dict[zip_code]
-    
+    try:
+        lat1, lon1 = zip_dict[zip_code]
+    except:
+       await ctx.send("Run the command again. ZIp doesn't exist.")
     # This formula calculates distance as-the-crow-flies between two positions of a latitude and longitude
     #mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
     
