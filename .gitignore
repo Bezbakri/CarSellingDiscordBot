@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 vehicles.csv
+Craigslist-Aware_ZipCodes.csv
+us_zip_codes.csv
