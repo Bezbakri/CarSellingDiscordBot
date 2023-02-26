@@ -64,6 +64,15 @@ async def GetCarListing(ctx):
             return m.content.lower() in ["coupe", "convertible", "sedan", "hatchback", "wagon", "pickup", "truck", "suv", "mini-van", "offroad", "bus", "van"]
         return False
     
+    def check_car_mileage(m):
+        if m.author == ctx.author and m.channel == ctx.channel:
+            try:
+                int(m.content)
+                return True
+            except:
+                return False
+        return False
+    
     async def end_routine(list_of_cars):
         await ctx.send("The list seems to be narrow enough. We found some cars you might like!")
     
@@ -161,6 +170,26 @@ async def GetCarListing(ctx):
         return
     await ctx.send(f"Found {len(filtered_by_bodystyle)} {user_bodystyle}s in your area.")
     
-    # more filters?
+    # Filter by mileage.
+    await ctx.send("What's your maximum number of miles on the car?")
+    car_mileage = await bot.wait_for("message", check=check_car_mileage)
+    user_car_mileage = int(car_mileage.content)
+    
+    await ctx.send("Noted! Working...")
+    filtered_by_mileage = []
+    for car in filtered_by_bodystyle:
+        try:
+            if car[11] <= user_car_mileage:
+                filtered_by_mileage.append(car)
+        except:
+            continue
+    
+    if len(filtered_by_mileage) == 0:
+        await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
+        return
+    if len(filtered_by_mileage) <= 10:
+        end_routine(filtered_by_mileage)
+        return
+    await ctx.send(f"Found {len(filtered_by_mileage)} autos with that mileage in your area.")
 
 bot.run(DISCORD_TOKEN)
