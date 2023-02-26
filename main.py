@@ -49,6 +49,7 @@ async def GetCarListing(ctx):
             except:
                 return False
         return False
+    
     def check_price(m):
         if m.author == ctx.author and m.channel == ctx.channel:
             try:
@@ -57,6 +58,14 @@ async def GetCarListing(ctx):
             except:
                 return False
         return False
+    
+    def check_bodystyle(m):
+        if m.author == ctx.author and m.channel == ctx.channel:
+            return m.content.lower() in ["coupe", "convertible", "sedan", "hatchback", "wagon", "pickup", "truck", "SUV", "mini-van", "offroad", "bus", "van"]
+        return False
+    
+    def end_routine(list_of_cars):
+        await ctx.send("The list seems to be narrow enough. We found some cars you might like!")
     
     # Build a dictionary to map US zip codes to latitude and longitude
     zip_dict = {}
@@ -80,7 +89,6 @@ async def GetCarListing(ctx):
     mile_radius = await bot.wait_for("message", check=check_mile_radius)
     mile_radius = float(mile_radius.content)
     
-    # ADD QUESTION FOR VARIABLE NAMED PRICE_LIMIT HERE
     await ctx.send("What is your price limit?")
     price_limit = await bot.wait_for("message", check=check_price)
     user_price_limit = int(price_limit.content)
@@ -96,21 +104,19 @@ async def GetCarListing(ctx):
                 price = int(price)
             except:
                 continue
+            
             if price > user_price_limit:
                 continue
             
             # ...then by distance.
             lat2 = car[23]
             lon2 = car[24]
-            
-            
-            
             # If no geolocation given, skip
-            if lat2 == '' or lon2 == '':
+            try:
+                lat2 = float(lat2)
+                lon2 = float(lon2)
+            except:
                 continue
-            
-            lat2 = float(lat2)
-            lon2 = float(lon2)
             
             # This formula calculates distance in miles as-the-crow-flies between two positions given lat/long
             dist_from_car = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))
@@ -122,7 +128,25 @@ async def GetCarListing(ctx):
             # Else, car is a valid proposition, note it down
             valid_possible_cars += 1
             filtered_once += car
-        
+    
+    if len(filtered_once) <= 10:
+        end_routine(filtered_once)
+    
+    # Filter by bodystyle.
+    await ctx.send("What bodystyle are you looking for? Options are: coupe, convertible, sedan, hatchback, wagon, pickup, truck, SUV, mini-van, offroad, bus, van.")
+    bodystyle = await bot.wait_for("message", check=check_bodystyle)
+    user_bodystyle = bodystyle.content.lower()
+    
+    filtered_by_bodystyle = []
+    for car in filtered_once:
+        if car[17] == user_bodystyle:
+            filtered_by_bodystyle += car
+    
+    if len(filtered_by_bodystyle) <= 10:
+        end_routine(filtered_by_bodystyle)
+    
+    # more filters?
+    
     await ctx.send(f"Your zip code is {zip_code}, so your latitude is {lat1} and your longitude is {lon1}. Valid cars found: {valid_possible_cars}")
 
 bot.run(DISCORD_TOKEN)
