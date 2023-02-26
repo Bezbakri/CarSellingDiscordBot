@@ -64,7 +64,7 @@ async def GetCarListing(ctx):
             return m.content.lower() in ["coupe", "convertible", "sedan", "hatchback", "wagon", "pickup", "truck", "SUV", "mini-van", "offroad", "bus", "van"]
         return False
     
-    def end_routine(list_of_cars):
+    async def end_routine(list_of_cars):
         await ctx.send("The list seems to be narrow enough. We found some cars you might like!")
     
     # Build a dictionary to map US zip codes to latitude and longitude
