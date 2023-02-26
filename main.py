@@ -224,13 +224,13 @@ async def GetCarListing(ctx):
     if len(filtered_by_drive) <= 10:
         await end_routine(filtered_by_mileage)
         return
-    await ctx.send(f"Done!")
+    await ctx.send("Done!")
     
     # We're done. If there are still too many results, send the closest 10 cars to the user. 
     closest_car_index = []
     for i, car in enumerate(filtered_by_drive):
-        lat2 = car[23]
-        lon2 = car[24]
+        lat2 = float(car[23])
+        lon2 = float(car[24])
         dist_from_car = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))
                                       +math.cos(math.radians(lat1))*math.cos(math.radians(lat2))
                                       *math.cos(math.radians(lon2-lon1)))*6371*0.62137119
@@ -238,7 +238,7 @@ async def GetCarListing(ctx):
     # Sort the closest cars
     closest_car_index.sort(key = lambda x: x[0])
     # Assemble list of cars from this indexer
-    closest_ten_cars = [filtered_by_drive[x[1]] for x[1] in closest_car_index][:10]
+    closest_ten_cars = [filtered_by_drive[x[1]] for x in closest_car_index][:10]
     await end_routine(closest_ten_cars)
 
 bot.run(DISCORD_TOKEN)
