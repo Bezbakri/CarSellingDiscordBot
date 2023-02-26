@@ -2,6 +2,7 @@ import nextcord as discord
 import os
 from dotenv import load_dotenv
 from nextcord.ext import commands
+import csv
 
 load_dotenv()
 
@@ -38,7 +39,7 @@ async def GetCarListing(ctx):
         return False
     
     def check_zip(m):
-        if m.author == ctx.author and m.channel == ctx.channel and len(m.content.strip()) == 5:
+        if m.author == ctx.author and m.channel == ctx.channel and len(m.content.trim()) == 5:
             try:
                 int(m.content)
                 return True
@@ -53,6 +54,13 @@ async def GetCarListing(ctx):
     number = await bot.wait_for("message", check=check_if_num)
     await ctx.send("Enter your zip code")
     zip_code = await bot.wait_for("message", check=check_zip)
-    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}. Zip is {zip_code.content}")
+    # Search user's zip code and get their lat and lon
+    with csv.reader(open('us_zip_codes.csv'), newline='') as zips:
+        # binary search for user's zip code
+        lat1 = 
+        lon1 = 
+    
+    mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
+    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}. Zip is {zip_code}")
 
 bot.run(DISCORD_TOKEN)
