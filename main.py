@@ -93,6 +93,7 @@ async def GetCarListing(ctx):
     price_limit = await bot.wait_for("message", check=check_price)
     user_price_limit = int(price_limit.content)
     
+    await ctx.send("Noted! Working...")
     filtered_once = []
     valid_possible_cars = 0
     with open('vehicles.csv', 'r', newline = '') as f:
@@ -143,6 +144,7 @@ async def GetCarListing(ctx):
     bodystyle = await bot.wait_for("message", check=check_bodystyle)
     user_bodystyle = bodystyle.content.lower()
     
+    await ctx.send("Noted! Working...")
     filtered_by_bodystyle = []
     for car in filtered_once:
         try:
