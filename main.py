@@ -132,6 +132,8 @@ async def GetCarListing(ctx):
     if len(filtered_once) <= 10:
         end_routine(filtered_once)
     
+    await ctx.send(f"Found {valid_possible_cars} in your area.")
+    
     # Filter by bodystyle.
     await ctx.send("What bodystyle are you looking for? Options are: coupe, convertible, sedan, hatchback, wagon, pickup, truck, SUV, mini-van, offroad, bus, van.")
     bodystyle = await bot.wait_for("message", check=check_bodystyle)
@@ -146,7 +148,5 @@ async def GetCarListing(ctx):
         end_routine(filtered_by_bodystyle)
     
     # more filters?
-    
-    await ctx.send(f"Your zip code is {zip_code}, so your latitude is {lat1} and your longitude is {lon1}. Valid cars found: {valid_possible_cars}")
 
 bot.run(DISCORD_TOKEN)
