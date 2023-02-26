@@ -129,8 +129,12 @@ async def GetCarListing(ctx):
             valid_possible_cars += 1
             filtered_once += car
     
-    if len(filtered_once) <= 10:
+    if len(filtered_once) == 0:
+        await ctx.send(f"Sorry, couldn't find any cars with the criteria you specified in your area.")
+        return
+    else if len(filtered_once) <= 10:
         end_routine(filtered_once)
+        return
     
     await ctx.send(f"Found {valid_possible_cars} in your area.")
     
@@ -144,8 +148,12 @@ async def GetCarListing(ctx):
         if car[17] == user_bodystyle:
             filtered_by_bodystyle += car
     
+    if len(filtered_by_bodystyle) == 0:
+        await ctx.send(f"Sorry, couldn't find any cars with the criteria you specified in your area.")
+        return
     if len(filtered_by_bodystyle) <= 10:
         end_routine(filtered_by_bodystyle)
+        return
     
     # more filters?
 
