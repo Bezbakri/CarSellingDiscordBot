@@ -39,7 +39,7 @@ async def GetCarListing(ctx):
         return False
     
     def check_zip(m):
-        if m.author == ctx.author and m.channel == ctx.channel and len(m.content.trim()) == 5:
+        if m.author == ctx.author and m.channel == ctx.channel and len(m.content.strip()) == 5:
             try:
                 int(m.content)
                 return True
@@ -49,13 +49,15 @@ async def GetCarListing(ctx):
     
     # Build a dictionary to map US zip codes to latitude and longitude
     zip_dict = {}
-    with csv.reader(open('us_zip_codes.csv', 'r'), newline='') as zips:
+    with open('us_zip_codes.csv', 'r', newline = '') as f:
+        zips = csv.reader(f)
         for row in zips:
             zip_dict[row[0]] = (row[1], row[2])
     
     # Get user's zip code
     await ctx.send("Enter your zip code")
     zip_code = await bot.wait_for("message", check=check_zip)
+    zip_code = zip_code.content
     # Convert this to latitude and longitude
     lat1, lon1 = zip_dict[zip_code]
     
