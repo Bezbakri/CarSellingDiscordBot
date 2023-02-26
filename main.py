@@ -54,14 +54,18 @@ async def GetCarListing(ctx):
     number = await bot.wait_for("message", check=check_if_num)
     await ctx.send("Enter your zip code")
     zip_code = await bot.wait_for("message", check=check_zip)
-    zip_code = zip_code.content.strip()
     # Search user's zip code and get their lat and lon
-    with csv.reader(open('us_zip_codes.csv'), newline='') as zips:
-        # binary search for user's zip code
-        lat1 = 
-        lon1 = 
+    lat1 = 0.0
+    lon1 = 0.0
+    with csv.reader(open('us_zip_codes.csv', 'r'), newline='') as zips:
+        # search for user's zip code linearly
+        for row in zips:
+            if zip_code == row[0]:
+                lat1 = row[1]
+                lon1 = row[2]
     
     mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
+    
     await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}. Zip is {zip_code}")
 
 bot.run(DISCORD_TOKEN)
