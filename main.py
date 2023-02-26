@@ -75,6 +75,13 @@ async def GetCarListing(ctx):
     
     async def end_routine(list_of_cars):
         await ctx.send("The list seems to be narrow enough. We found some cars you might like!")
+        embed_color = 0xEF8A01
+        urls = ""
+        for car in list_of_cars:
+            urls += car[1]
+            urls += "\n"
+        embed_to_send = discord.Embed(title = "List of car listings", description=urls, color=embed_color)
+        await ctx.send(embed=embed_to_send)
     
     # Build a dictionary to map US zip codes to latitude and longitude
     zip_dict = {}
