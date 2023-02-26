@@ -128,7 +128,7 @@ async def GetCarListing(ctx):
                 
             # Else, car is a valid proposition, note it down
             valid_possible_cars += 1
-            filtered_once += car
+            filtered_once.append(car)
     
     if len(filtered_once) == 0:
         await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
@@ -149,7 +149,7 @@ async def GetCarListing(ctx):
     for car in filtered_once:
         try:
             if car[17].lower() == user_bodystyle:
-                filtered_by_bodystyle += car
+                filtered_by_bodystyle.append(car)
         except:
             continue
     
@@ -159,7 +159,7 @@ async def GetCarListing(ctx):
     if len(filtered_by_bodystyle) <= 10:
         end_routine(filtered_by_bodystyle)
         return
-    await ctx.send(f"Found {valid_possible_cars} {filtered_by_bodystyle[17]}s in your area.")
+    await ctx.send(f"Found {len(filtered_by_bodystyle)} {user_bodystyle}s in your area.")
     
     # more filters?
 
