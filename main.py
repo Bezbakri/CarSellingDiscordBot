@@ -61,7 +61,7 @@ async def GetCarListing(ctx):
     
     def check_bodystyle(m):
         if m.author == ctx.author and m.channel == ctx.channel:
-            return m.content.lower() in ["coupe", "convertible", "sedan", "hatchback", "wagon", "pickup", "truck", "SUV", "mini-van", "offroad", "bus", "van"]
+            return m.content.lower() in ["coupe", "convertible", "sedan", "hatchback", "wagon", "pickup", "truck", "suv", "mini-van", "offroad", "bus", "van"]
         return False
     
     async def end_routine(list_of_cars):
