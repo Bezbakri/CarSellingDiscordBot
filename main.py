@@ -46,26 +46,22 @@ async def GetCarListing(ctx):
             except:
                 return False
         return False
-    await ctx.send("What is your name?")
-    name = await bot.wait_for("message", check=check_author)
-    await ctx.send("What is your favorite color?")
-    color = await bot.wait_for("message", check=check_author)
-    await ctx.send("Enter a number")
-    number = await bot.wait_for("message", check=check_if_num)
+    
+    # Build a dictionary to map US zip codes to latitude and longitude
+    zip_dict = {}
+    with csv.reader(open('us_zip_codes.csv', 'r'), newline='') as zips:
+        for row in zips:
+            zip_dict[row[0]] = (row[1], row[2])
+    
+    # Get user's zip code
     await ctx.send("Enter your zip code")
     zip_code = await bot.wait_for("message", check=check_zip)
-    # Search user's zip code and get their lat and lon
-    lat1 = 0.0
-    lon1 = 0.0
-    with csv.reader(open('us_zip_codes.csv', 'r'), newline='') as zips:
-        # search for user's zip code linearly
-        for row in zips:
-            if zip_code == row[0]:
-                lat1 = row[1]
-                lon1 = row[2]
+    # Convert this to latitude and longitude
+    lat1, lon1 = zip_dict[zip_code]
     
-    mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
+    # This formula calculates distance as-the-crow-flies between two positions of a latitude and longitude
+    #mi_dist = math.acos(math.sin(math.radians(lat1))*math.sin(math.radians(lat2))+math.cos(math.radians(lat1))*math.cos(math.radians(lat2))*math.cos(math.radians(lon2-lon1)))*6371*0.62137119
     
-    await ctx.send(f"Hi {name.content}, who likes {color.content}. You enetered {float(number.content)}. Zip is {zip_code}")
+    await ctx.send(f"Your zip code is {zip_code}, so your latitude is {lat1} and your longitude is {lon1}.")
 
 bot.run(DISCORD_TOKEN)
