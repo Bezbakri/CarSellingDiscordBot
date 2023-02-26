@@ -145,8 +145,11 @@ async def GetCarListing(ctx):
     
     filtered_by_bodystyle = []
     for car in filtered_once:
-        if car[17] == user_bodystyle:
-            filtered_by_bodystyle += car
+        try:
+            if car[17] == user_bodystyle:
+                filtered_by_bodystyle += car
+        except:
+            continue
     
     if len(filtered_by_bodystyle) == 0:
         await ctx.send("Sorry, couldn't find any cars with the criteria you specified in your area.")
